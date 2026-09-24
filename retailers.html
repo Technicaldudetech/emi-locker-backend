@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retailers - EMI Locker</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body { background: #0f172a; color: #fff; padding: 15px; }
+  .header { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+  .header .left { display: flex; align-items: center; }
+  .header a { color: #facc15; text-decoration: none; font-size: 24px; margin-right: 15px; }
+  .header h1 { font-size: 18px; color: #facc15; }
+  .btn-add { background: #22c55e; color: #fff; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold; border: none; cursor: pointer; }
+
+  .search-box { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: #fff; font-size: 14px; margin-bottom: 15px; outline: none; }
+  .search-box:focus { border-color: #facc15; }
+
+  .retailer-card { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #3b82f6; position: relative; }
+  .retailer-card h3 { font-size: 15px; margin-bottom: 5px; color: #fff; }
+  .retailer-card p { font-size: 12px; color: #94a3b8; margin-bottom: 3px; }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 5px; font-size: 11px; margin-top: 5px; background: #3b82f6; color: #fff; }
+  .stats-mini { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .stats-mini div { background: #0f172a; padding: 5px 10px; border-radius: 5px; font-size: 11px; color: #facc15; }
+
+  .action-btns { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; }
+  .btn-icon { background: #334155; border: none; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .btn-icon.edit { background: #3b82f6; }
+  .btn-icon.delete { background: #ef4444; }
+
+  .no-result { text-align: center; color: #94a3b8; font-size: 14px; margin-top: 30px; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="left">
+      <a href="index.html">←</a>
+      <h1>All Retailers</h1>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button onclick="exportRetailers()" class="btn-add" style="background: #3b82f6;">📥 Export</button>
+      <a href="add-retailer.html" class="btn-add">➕ Add</a>
+    </div>
+  </div>
+
+  <input type="text" class="search-box" id="searchInput" placeholder="🔍 Search by Shop, Owner or Location...">
+
+  <div id="retailerList"></div>
+
+    <script>
+    var container = document.getElementById("retailerList");
+    var allRetailers = [];
+
+    async function loadRetailers() {
+      try {
+        var response = await fetch("http://localhost:5000/api/retailers");
+        allRetailers = await response.json();
+        renderRetailers(allRetailers);
+      } catch (error) {
+        container.innerHTML = '<p class="no-result">❌ Server se connect nahi ho paaya.</p>';
+      }
+    }
+
+    function renderRetailers(list) {
+      container.innerHTML = "";
+      if (list.length === 0) {
+        container.innerHTML = '<p class="no-result">❌ No retailers found!</p>';
+        return;
+      }
+      list.forEach(function (r) {
+        var card = document.createElement("div");
+        card.className = "retailer-card";
+        card.innerHTML = `
+          <h3>🏪 ${r.shop}</h3>
+          <p>Owner: ${r.owner}</p>
+          <p>Location: ${r.location || "-"}</p>
+          <div class="stats-mini">
+            <div>Total: ${r.total}</div>
+            <div>Active: ${r.active}</div>
+            <div>Locked: ${r.locked}</div>
+          </div>
+          <span class="badge">Verified</span>
+          <div class="action-btns">
+            <button class="btn-icon delete" onclick="deleteRetailer('${r._id}')">🗑️</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function deleteRetailer(id) {
+      if (!confirm("🗑️ Delete this retailer?")) return;
+      await fetch(`http://localhost:5000/api/retailers/${id}`, { method: "DELETE" });
+      loadRetailers();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function (e) {
+      var text = e.target.value.toLowerCase();
+      var filtered = allRetailers.filter(r => r.shop.toLowerCase().includes(text) || r.owner.toLowerCase().includes(text));
+      renderRetailers(filtered);
+    });
+
+    loadRetailers();
+  </script>
+
+</body>
+</html>

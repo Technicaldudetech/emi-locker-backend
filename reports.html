@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports - EMI Locker</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  body {
+    background: #0f172a;
+    color: #fff;
+    padding: 15px;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+  .header a {
+    color: #facc15;
+    text-decoration: none;
+    font-size: 24px;
+    margin-right: 15px;
+  }
+  .header h1 {
+    font-size: 18px;
+    color: #facc15;
+  }
+
+  /* Summary Cards */
+  .summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  .summary-card {
+    background: #1e293b;
+    padding: 12px;
+    border-radius: 10px;
+    border-left: 4px solid #3b82f6;
+  }
+  .summary-card h3 {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 5px;
+  }
+  .summary-card p {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .blue { color: #3b82f6; }
+  .green { color: #22c55e; }
+  .red { color: #ef4444; }
+  .yellow { color: #facc15; }
+
+  /* Section Title */
+  .section-title {
+    color: #facc15;
+    font-size: 14px;
+    margin: 20px 0 10px 0;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 5px;
+  }
+
+  /* Bar Chart */
+  .chart {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 180px;
+  }
+  .bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 14%;
+  height: 100%;
+}
+  .bar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #facc15, #f59e0b);
+  border-radius: 5px 5px 0 0;
+  transition: 0.3s;
+}
+  .bar-wrapper span {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 5px;
+  }
+  .bar-value {
+    font-size: 10px;
+    color: #facc15;
+    margin-bottom: 5px;
+  }
+
+  /* Top Retailers List */
+  .retailer-row {
+    background: #1e293b;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .retailer-row h4 {
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .retailer-row p {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+  .retailer-row .count {
+    font-size: 16px;
+    font-weight: bold;
+    color: #facc15;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <a href="index.html">←</a>
+    <h1>Reports & Analytics</h1>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary">
+    <div class="summary-card">
+      <h3>This Month Revenue</h3>
+      <p class="green">₹4,25,000</p>
+    </div>
+    <div class="summary-card">
+      <h3>Pending Amount</h3>
+      <p class="red">₹6,00,000</p>
+    </div>
+    <div class="summary-card">
+      <h3>New Devices Added</h3>
+      <p class="blue">1,240</p>
+    </div>
+    <div class="summary-card">
+      <h3>Devices Locked</h3>
+      <p class="yellow">165</p>
+    </div>
+  </div>
+
+  <!-- Bar Chart -->
+  <div class="section-title">📊 Monthly Collection (Last 6 Months)</div>
+  <div class="chart">
+    <div class="bar-wrapper">
+      <span class="bar-value">₹2.1L</span>
+      <div class="bar" style="height: 40%;"></div>
+      <span>Apr</span>
+    </div>
+    <div class="bar-wrapper">
+      <span class="bar-value">₹3.2L</span>
+      <div class="bar" style="height: 60%;"></div>
+      <span>May</span>
+    </div>
+    <div class="bar-wrapper">
+      <span class="bar-value">₹2.8L</span>
+      <div class="bar" style="height: 52%;"></div>
+      <span>Jun</span>
+    </div>
+    <div class="bar-wrapper">
+      <span class="bar-value">₹3.9L</span>
+      <div class="bar" style="height: 75%;"></div>
+      <span>Jul</span>
+    </div>
+    <div class="bar-wrapper">
+      <span class="bar-value">₹4.5L</span>
+      <div class="bar" style="height: 90%;"></div>
+      <span>Aug</span>
+    </div>
+    <div class="bar-wrapper">
+      <span class="bar-value">₹4.2L</span>
+      <div class="bar" style="height: 82%;"></div>
+      <span>Sep</span>
+    </div>
+  </div>
+
+  <!-- Top Retailers -->
+  <div class="section-title">🏆 Top Performing Retailers</div>
+
+  <div class="retailer-row">
+    <div>
+      <h4>Khan Mobile Center</h4>
+      <p>Mumbai, Andheri</p>
+    </div>
+    <div class="count">60 📱</div>
+  </div>
+
+  <div class="retailer-row">
+    <div>
+      <h4>Sharma Mobile Point</h4>
+      <p>Noida, Sector 18</p>
+    </div>
+    <div class="count">45 📱</div>
+  </div>
+
+  <div class="retailer-row">
+    <div>
+      <h4>Verma Electronics</h4>
+      <p>Delhi, Rohini</p>
+    </div>
+    <div class="count">30 📱</div>
+  </div>
+
+</body>
+</html>

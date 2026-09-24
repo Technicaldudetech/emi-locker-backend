@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - EMI Locker Admin</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body { background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+  .login-box { background: #1e293b; padding: 30px 20px; border-radius: 15px; width: 100%; max-width: 350px; border-top: 4px solid #facc15; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+  .logo { text-align: center; margin-bottom: 25px; }
+  .logo h1 { color: #facc15; font-size: 24px; letter-spacing: 1px; }
+  .logo p { color: #94a3b8; font-size: 12px; margin-top: 5px; }
+  .input-group { margin-bottom: 15px; }
+  .input-group label { display: block; color: #94a3b8; font-size: 12px; margin-bottom: 5px; }
+  .input-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 14px; outline: none; }
+  .input-group input:focus { border-color: #facc15; }
+  .btn-login { width: 100%; padding: 12px; background: #facc15; color: #0f172a; font-weight: bold; font-size: 15px; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+  .btn-login:hover { background: #eab308; }
+  .footer-text { text-align: center; color: #64748b; font-size: 11px; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+  <div class="login-box">
+    <div class="logo">
+      <h1>🔒 EMI LOCKER</h1>
+      <p>Admin Panel Login</p>
+    </div>
+
+    <div class="input-group">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter your username" required>
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+    </div>
+
+    <button type="button" id="loginBtn" class="btn-login">LOGIN</button>
+
+    <p class="footer-text">© 2026 EMI Locker. Secure Admin Access.</p>
+  </div>
+
+  <script>
+    document.getElementById("loginBtn").addEventListener("click", function () {
+      var user = document.getElementById("username").value;
+      var pass = document.getElementById("password").value;
+
+      if (user === "admin" && pass === "1234") {
+        window.location.href = "index.html";
+      } else {
+        alert("❌ Invalid Username or Password!\n\nHint: Username = admin, Password = 1234");
+      }
+    });
+  </script>
+
+</body>
+</html>

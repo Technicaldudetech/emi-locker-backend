@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Retailer - EMI Locker</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body { background: #0f172a; color: #fff; padding: 15px; }
+  .header { display: flex; align-items: center; background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+  .header a { color: #facc15; text-decoration: none; font-size: 24px; margin-right: 15px; }
+  .header h1 { font-size: 18px; color: #facc15; }
+  .form-box { background: #1e293b; padding: 20px; border-radius: 10px; border-top: 4px solid #3b82f6; }
+  .input-group { margin-bottom: 15px; }
+  .input-group label { display: block; color: #94a3b8; font-size: 12px; margin-bottom: 5px; }
+  .input-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 14px; outline: none; }
+  .input-group input:focus { border-color: #facc15; }
+  .btn-submit { width: 100%; padding: 14px; background: #22c55e; color: #fff; font-weight: bold; font-size: 15px; border: none; border-radius: 10px; cursor: pointer; margin-top: 10px; }
+  .btn-submit:hover { background: #16a34a; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <a href="retailers.html">←</a>
+    <h1>Add New Retailer</h1>
+  </div>
+
+  <div class="form-box">
+    <div class="input-group">
+      <label>Shop / Retailer Name</label>
+      <input type="text" id="shopName" placeholder="e.g. Sharma Mobile Point" required>
+    </div>
+
+    <div class="input-group">
+      <label>Owner Name</label>
+      <input type="text" id="ownerName" placeholder="e.g. Rajesh Sharma" required>
+    </div>
+
+    <div class="input-group">
+      <label>Location</label>
+      <input type="text" id="location" placeholder="e.g. Noida, Sector 18">
+    </div>
+
+    <div class="input-group">
+      <label>Phone Number</label>
+      <input type="text" id="phone" placeholder="+91 XXXXX XXXXX">
+    </div>
+
+    <button class="btn-submit" id="saveBtn">💾 SAVE RETAILER</button>
+  </div>
+
+    <script>
+    document.getElementById("saveBtn").addEventListener("click", async function () {
+      var shop = document.getElementById("shopName").value;
+      var owner = document.getElementById("ownerName").value;
+
+      if (shop === "" || owner === "") {
+        alert("❌ Please fill Shop Name and Owner Name!");
+        return;
+      }
+
+      var newRetailer = {
+        shop: shop,
+        owner: owner,
+        location: document.getElementById("location").value,
+        phone: document.getElementById("phone").value
+      };
+
+      try {
+        var response = await fetch("http://localhost:5000/api/retailers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newRetailer)
+        });
+
+        if (response.ok) {
+          alert("✅ Retailer Saved Successfully in Database!\n\n" + shop);
+          window.location.href = "retailers.html";
+        } else {
+          alert("❌ Data save nahi ho paaya.");
+        }
+      } catch (error) {
+        alert("❌ Server se connect nahi ho paaya!");
+      }
+    });
+  </script>
+
+</body>
+</html>
