@@ -3,67 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EMI Locker - Admin Panel</title>
+<title>Login - EMI Locker Admin</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-  body { background: #0f172a; color: #fff; padding: 15px; }
-  .header { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-  .header h1 { font-size: 18px; color: #facc15; }
-  .header span { font-size: 12px; color: #94a3b8; }
-  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-  .card { background: #1e293b; padding: 15px; border-radius: 10px; border-left: 4px solid #facc15; }
-  .card h3 { font-size: 12px; color: #94a3b8; margin-bottom: 5px; }
-  .card p { font-size: 20px; font-weight: bold; color: #fff; }
-  .menu { background: #1e293b; border-radius: 10px; padding: 10px; }
-  .menu-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #334155; font-size: 14px; }
-  .menu-item:last-child { border-bottom: none; }
-  .menu-item span { color: #facc15; }
-  a { text-decoration: none; color: inherit; }
+  body { background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+  .login-box { background: #1e293b; padding: 30px 20px; border-radius: 15px; width: 100%; max-width: 350px; border-top: 4px solid #facc15; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+  .logo { text-align: center; margin-bottom: 25px; }
+  .logo h1 { color: #facc15; font-size: 24px; letter-spacing: 1px; }
+  .logo p { color: #94a3b8; font-size: 12px; margin-top: 5px; }
+  .input-group { margin-bottom: 15px; }
+  .input-group label { display: block; color: #94a3b8; font-size: 12px; margin-bottom: 5px; }
+  .input-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 14px; outline: none; }
+  .input-group input:focus { border-color: #facc15; }
+  .btn-login { width: 100%; padding: 12px; background: #facc15; color: #0f172a; font-weight: bold; font-size: 15px; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+  .btn-login:hover { background: #eab308; }
+  .footer-text { text-align: center; color: #64748b; font-size: 11px; margin-top: 20px; }
 </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>EMI LOCKER</h1>
-    <span>Admin Panel</span>
+  <div class="login-box">
+    <div class="logo">
+      <h1>🔒 EMI LOCKER</h1>
+      <p>Admin Panel Login</p>
+    </div>
+
+    <div class="input-group">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter your username" required>
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+    </div>
+
+    <button type="button" id="loginBtn" class="btn-login">LOGIN</button>
+
+    <p class="footer-text">© 2026 EMI Locker. Secure Admin Access.</p>
   </div>
 
-  <div class="stats">
-    <div class="card">
-      <h3>Total Devices</h3>
-      <p>12,642</p>
-    </div>
-    <div class="card">
-      <h3>Active Devices</h3>
-      <p>10,987</p>
-    </div>
-    <div class="card">
-      <h3>Locked Devices</h3>
-      <p>1,655</p>
-    </div>
-    <div class="card">
-      <h3>Total Revenue</h3>
-      <p>₹24,50,000</p>
-    </div>
-  </div>
+  <script>
+    document.getElementById("loginBtn").addEventListener("click", function () {
+      var user = document.getElementById("username").value;
+      var pass = document.getElementById("password").value;
 
-  <div class="menu">
-    <a href="devices.html">
-      <div class="menu-item">Devices <span>›</span></div>
-    </a>
-    <a href="retailers.html">
-      <div class="menu-item">Retailers <span>›</span></div>
-    </a>
-    <a href="payments.html">
-      <div class="menu-item">Payments <span>›</span></div>
-    </a>
-    <a href="reports.html">
-      <div class="menu-item">Reports <span>›</span></div>
-    </a>
-    <a href="settings.html">
-      <div class="menu-item">Settings <span>›</span></div>
-    </a>
-  </div>
+      if (user === "admin" && pass === "1234") {
+        window.location.href = "dashboard.html";
+      } else {
+        alert("❌ Invalid Username or Password!\n\nHint: Username = admin, Password = 1234");
+      }
+    });
+  </script>
 
 </body>
 </html>
