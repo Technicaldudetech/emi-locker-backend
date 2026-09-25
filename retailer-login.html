@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retailer Login - EMI Locker</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body { background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+  .login-box { background: #1e293b; padding: 30px 20px; border-radius: 15px; width: 100%; max-width: 350px; border-top: 4px solid #22c55e; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+  .logo { text-align: center; margin-bottom: 25px; }
+  .logo h1 { color: #22c55e; font-size: 24px; letter-spacing: 1px; }
+  .logo p { color: #94a3b8; font-size: 12px; margin-top: 5px; }
+  .input-group { margin-bottom: 15px; }
+  .input-group label { display: block; color: #94a3b8; font-size: 12px; margin-bottom: 5px; }
+  .input-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 14px; outline: none; }
+  .input-group input:focus { border-color: #22c55e; }
+  .btn-login { width: 100%; padding: 12px; background: #22c55e; color: #fff; font-weight: bold; font-size: 15px; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+  .btn-login:hover { background: #16a34a; }
+  .admin-link { text-align: center; margin-top: 15px; }
+  .admin-link a { color: #94a3b8; font-size: 12px; text-decoration: none; }
+  .footer-text { text-align: center; color: #64748b; font-size: 11px; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+  <div class="login-box">
+    <div class="logo">
+      <h1>🏪 RETAILER PANEL</h1>
+      <p>EMI Locker Dealer Login</p>
+    </div>
+
+    <div class="input-group">
+      <label>Phone Number</label>
+      <input type="text" id="phone" placeholder="Enter registered phone number">
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter your password">
+    </div>
+
+    <button type="button" id="loginBtn" class="btn-login">LOGIN</button>
+
+    <div class="admin-link">
+      <a href="index.html">← Admin Login</a>
+    </div>
+
+    <p class="footer-text">© 2026 EMI Locker. Retailer Portal.</p>
+  </div>
+
+  <script>
+    document.getElementById("loginBtn").addEventListener("click", async function () {
+      var phone = document.getElementById("phone").value;
+      var pass = document.getElementById("password").value;
+
+      if (phone === "" || pass === "") {
+        alert("❌ Please fill Phone Number and Password!");
+        return;
+      }
+
+      try {
+        var response = await fetch("https://emi-locker-backend-1.onrender.com/api/retailers/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone: phone, password: pass })
+        });
+
+        var data = await response.json();
+
+        if (response.ok) {
+          // Retailer ki info save karo
+          localStorage.setItem("retailerId", data.retailer.id);
+          localStorage.setItem("retailerShop", data.retailer.shop);
+          localStorage.setItem("retailerOwner", data.retailer.owner);
+          localStorage.setItem("isRetailerLoggedIn", "true");
+          alert("✅ Welcome " + data.retailer.shop + "!");
+          window.location.href = "retailer-dashboard.html";
+        } else {
+          alert("❌ " + data.message);
+        }
+      } catch (error) {
+        alert("❌ Server se connect nahi ho paaya!");
+      }
+    });
+  </script>
+
+</body>
+</html>
