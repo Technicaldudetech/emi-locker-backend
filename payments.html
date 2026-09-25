@@ -65,7 +65,7 @@
     // 1. API se payments laao
     async function loadPayments() {
       try {
-        var response = await fetch("http://localhost:5000/api/payments");
+        var response = await fetch("https://emi-locker-backend-1.onrender.com/api/payments");
         payments = await response.json();
         renderPayments();
       } catch (error) {
@@ -125,7 +125,7 @@
 
       if (confirm("✅ Confirm payment received for " + p.customer + " (₹" + p.amount + ")?")) {
         try {
-          await fetch(`http://localhost:5000/api/payments/${id}`, {
+          await fetch(`https://emi-locker-backend-1.onrender.com/api/payments/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ status: "Paid" })

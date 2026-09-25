@@ -92,7 +92,7 @@
     // 1. API se is device ka data laao (GET by ID)
     async function loadDevice() {
       try {
-        var response = await fetch(`http://localhost:5000/api/devices/${deviceId}`);
+        var response = await fetch(`https://emi-locker-backend-1.onrender.com/api/devices/${deviceId}`);
         var dev = await response.json();
 
         // UI mein data daalo
@@ -122,7 +122,7 @@
     // 3. Lock Button (PUT API)
     document.getElementById("lockBtn").addEventListener("click", async function () {
       try {
-        await fetch(`http://localhost:5000/api/devices/${deviceId}`, {
+        await fetch(`https://emi-locker-backend-1.onrender.com/api/devices/${deviceId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "LOCKED" })
@@ -137,7 +137,7 @@
     // 4. Unlock Button (PUT API)
     document.getElementById("unlockBtn").addEventListener("click", async function () {
       try {
-        await fetch(`http://localhost:5000/api/devices/${deviceId}`, {
+        await fetch(`https://emi-locker-backend-1.onrender.com/api/devices/${deviceId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "ACTIVE" })

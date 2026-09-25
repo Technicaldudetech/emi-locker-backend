@@ -72,7 +72,7 @@
     // 1. API se saare devices laao (GET)
     async function loadDevices() {
       try {
-        var response = await fetch("http://localhost:5000/api/devices");
+        var response = await fetch("https://emi-locker-backend-1.onrender.com/api/devices");
         allDevices = await response.json();
         renderDevices(allDevices);
       } catch (error) {
@@ -117,7 +117,7 @@
       if (!confirm("🗑️ Are you sure you want to delete this device?")) return;
 
       try {
-        await fetch(`http://localhost:5000/api/devices/${id}`, {
+        await fetch(`https://emi-locker-backend-1.onrender.com/api/devices/${id}`, {
           method: "DELETE"
         });
         alert("✅ Device deleted!");

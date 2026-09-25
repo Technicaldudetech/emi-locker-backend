@@ -54,7 +54,7 @@
 
     async function loadRetailers() {
       try {
-        var response = await fetch("http://localhost:5000/api/retailers");
+        var response = await fetch("https://emi-locker-backend-1.onrender.com/api/retailers");
         allRetailers = await response.json();
         renderRetailers(allRetailers);
       } catch (error) {
@@ -91,7 +91,7 @@
 
     async function deleteRetailer(id) {
       if (!confirm("🗑️ Delete this retailer?")) return;
-      await fetch(`http://localhost:5000/api/retailers/${id}`, { method: "DELETE" });
+      await fetch(`https://emi-locker-backend-1.onrender.com/api/retailers/${id}`, { method: "DELETE" });
       loadRetailers();
     }
 
