@@ -5,7 +5,8 @@ const paymentSchema = new mongoose.Schema({
   device: { type: String, required: true },
   amount: { type: Number, required: true },
   date: { type: String, required: true },
-  status: { type: String, default: 'Pending' } // Paid, Pending, Overdue
+  status: { type: String, default: 'Pending' },
+  retailerId: { type: String, default: null } // Naya field
 }, { timestamps: true });
 
 module.exports = mongoose.model('Payment', paymentSchema);

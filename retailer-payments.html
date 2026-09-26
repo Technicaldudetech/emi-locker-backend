@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Payments - Retailer</title>
+
+<script>
+  if (localStorage.getItem("isRetailerLoggedIn") !== "true") {
+    window.location.href = "retailer-login.html";
+  }
+</script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body { background: #0f172a; color: #fff; padding: 15px; }
+  .header { display: flex; align-items: center; background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+  .header a { color: #22c55e; text-decoration: none; font-size: 24px; margin-right: 15px; }
+  .header h1 { font-size: 18px; color: #22c55e; }
+  .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+  .summary-card { background: #1e293b; padding: 12px; border-radius: 10px; border-left: 4px solid #22c55e; }
+  .summary-card h3 { font-size: 11px; color: #94a3b8; margin-bottom: 5px; }
+  .summary-card p { font-size: 18px; font-weight: bold; }
+  .paid-amount { color: #22c55e; }
+  .pending-amount { color: #ef4444; }
+  .payment-card { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #3b82f6; }
+  .payment-card h3 { font-size: 15px; margin-bottom: 5px; }
+  .payment-card p { font-size: 12px; color: #94a3b8; margin-bottom: 3px; }
+  .amount-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .amount { font-size: 16px; font-weight: bold; color: #facc15; }
+  .status-badge { padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: bold; }
+  .paid { background: #22c55e; color: #fff; }
+  .pending { background: #f59e0b; color: #fff; }
+  .overdue { background: #ef4444; color: #fff; }
+  .no-result { text-align: center; color: #94a3b8; font-size: 14px; margin-top: 30px; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <a href="retailer-dashboard.html">←</a>
+    <h1>My Payments</h1>
+  </div>
+
+  <div class="summary">
+    <div class="summary-card">
+      <h3>Total Collected</h3>
+      <p class="paid-amount" id="totalCollected">₹0</p>
+    </div>
+    <div class="summary-card">
+      <h3>Pending Amount</h3>
+      <p class="pending-amount" id="totalPending">₹0</p>
+    </div>
+  </div>
+
+  <div id="paymentsList"></div>
+
+  <script>
+    var container = document.getElementById("paymentsList");
+    var payments = [];
+    var retailerId = localStorage.getItem("retailerId");
+
+    async function loadPayments() {
+      try {
+        var response = await fetch("https://emi-locker-backend-1.onrender.com/api/payments?retailerId=" + retailerId);
+        payments = await response.json();
+        renderPayments();
+      } catch (error) {
+        container.innerHTML = '<p class="no-result">❌ Server se connect nahi ho paaya.</p>';
+      }
+    }
+
+    function renderPayments() {
+      container.innerHTML = "";
+      var totalPaid = 0;
+      var totalPending = 0;
+
+      if (payments.length === 0) {
+        container.innerHTML = '<p class="no-result">❌ Abhi tak koi payment record nahi hai.</p>';
+      }
+
+      payments.forEach(function (p) {
+        var badgeClass = p.status.toLowerCase();
+        if (p.status === "Paid") totalPaid += p.amount;
+        else totalPending += p.amount;
+
+        var div = document.createElement("div");
+        div.className = "payment-card";
+        if (p.status === "Pending") div.style.borderLeftColor = "#f59e0b";
+        if (p.status === "Overdue") div.style.borderLeftColor = "#ef4444";
+
+        div.innerHTML = `
+          <h3>💰 ${p.customer}</h3>
+          <p>${p.device}</p>
+          <p>Date: ${p.date}</p>
+          <div class="amount-row">
+            <span class="amount">₹${p.amount.toLocaleString()}</span>
+            <span class="status-badge ${badgeClass}">${p.status}</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      document.getElementById("totalCollected").innerHTML = "₹" + totalPaid.toLocaleString();
+      document.getElementById("totalPending").innerHTML = "₹" + totalPending.toLocaleString();
+    }
+
+    loadPayments();
+  </script>
+
+</body>
+</html>
