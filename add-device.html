@@ -45,6 +45,11 @@
     </div>
 
     <div class="input-group">
+      <label>Customer Phone Number</label>
+      <input type="text" id="customerPhone" placeholder="e.g. 9876543210" required>
+   </div>
+
+    <div class="input-group">
       <label>IMEI Number</label>
       <input type="text" id="imeiNumber" placeholder="15 digit IMEI" required>
     </div>
@@ -85,11 +90,12 @@
       }
 
       var newDevice = {
-        name: name,
-        customer: customer,
-        imei: imei,
-        status: "ACTIVE" // Default status
-      };
+  name: name,
+  customer: customer,
+  imei: imei,
+  customerPhone: document.getElementById("customerPhone").value, // YEH LINE ADD KAREIN
+  status: "ACTIVE"
+};
 
       try {
         var response = await fetch("https://emi-locker-backend-1.onrender.com/api/devices", {

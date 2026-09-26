@@ -91,11 +91,12 @@
       }
 
       var newDevice = {
-        name: name,
-        customer: customer,
-        imei: imei,
-        status: "ACTIVE",
-        retailerId: retailerId   // Ye device is retailer se link ho jayega
+      name: name,
+      customer: customer,
+      imei: imei,
+      customerPhone: document.getElementById("customerPhone").value, // YEH LINE ADD KAREIN
+      status: "ACTIVE",
+      retailerId: retailerId
       };
 
       try {
