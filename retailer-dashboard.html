@@ -82,8 +82,10 @@
     document.getElementById("shopName").innerHTML = "🏪 " + shopName;
     document.getElementById("ownerInfo").innerHTML = "Welcome, " + ownerName;
 
-    async function loadStats() {
+        async function loadStats() {
+      var retailerId = localStorage.getItem("retailerId");
       try {
+        // Devices ka data
         var response = await fetch("https://emi-locker-backend-1.onrender.com/api/devices?retailerId=" + retailerId);
         var devices = await response.json();
 
@@ -94,6 +96,16 @@
         document.getElementById("activeDevices").innerHTML = active;
         document.getElementById("lockedDevices").innerHTML = locked;
         document.getElementById("totalCustomers").innerHTML = devices.length;
+
+        // Payments ka total
+        var payRes = await fetch("https://emi-locker-backend-1.onrender.com/api/payments?retailerId=" + retailerId);
+        var payments = await payRes.json();
+        var totalRevenue = payments
+          .filter(p => p.status === "Paid")
+          .reduce((sum, p) => sum + p.amount, 0);
+
+        document.getElementById("retailerRevenue").innerHTML = "₹" + totalRevenue.toLocaleString();
+
       } catch (error) {
         console.log(error);
       }

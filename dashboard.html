@@ -42,21 +42,21 @@
 
   <div class="stats">
     <div class="card">
-      <h3>Total Devices</h3>
-      <p>12,642</p>
-    </div>
-    <div class="card">
-      <h3>Active Devices</h3>
-      <p>10,987</p>
-    </div>
-    <div class="card">
-      <h3>Locked Devices</h3>
-      <p>1,655</p>
-    </div>
-    <div class="card">
-      <h3>Total Revenue</h3>
-      <p>₹24,50,000</p>
-    </div>
+  <h3>Total Devices</h3>
+  <p id="statTotalDevices">0</p>
+</div>
+<div class="card">
+  <h3>Active Devices</h3>
+  <p id="statActiveDevices">0</p>
+</div>
+<div class="card">
+  <h3>Locked Devices</h3>
+  <p id="statLockedDevices">0</p>
+</div>
+<div class="card">
+  <h3>Total Revenue</h3>
+  <p id="statRevenue">₹0</p>
+</div>
   </div>
 
   <div class="menu">
@@ -82,6 +82,37 @@
   localStorage.removeItem("isLoggedIn");
   window.location.href = "index.html";
   }
+
+      loadDashboardStats();
+
+      // Dashboard ke real stats load karo
+    async function loadDashboardStats() {
+      try {
+        // Devices ka data laao
+        var devRes = await fetch("https://emi-locker-backend-1.onrender.com/api/devices");
+        var devices = await devRes.json();
+
+        var totalDevices = devices.length;
+        var activeDevices = devices.filter(d => d.status === "ACTIVE").length;
+        var lockedDevices = devices.filter(d => d.status === "LOCKED").length;
+
+        // Payments ka data laao (Revenue ke liye)
+        var payRes = await fetch("https://emi-locker-backend-1.onrender.com/api/payments");
+        var payments = await payRes.json();
+        var totalRevenue = payments
+          .filter(p => p.status === "Paid")
+          .reduce((sum, p) => sum + p.amount, 0);
+
+        // UI update karo
+        document.getElementById("statTotalDevices").innerHTML = totalDevices.toLocaleString();
+        document.getElementById("statActiveDevices").innerHTML = activeDevices.toLocaleString();
+        document.getElementById("statLockedDevices").innerHTML = lockedDevices.toLocaleString();
+        document.getElementById("statRevenue").innerHTML = "₹" + totalRevenue.toLocaleString();
+
+      } catch (error) {
+        console.log("Stats load error:", error);
+      }
+    }
   </script>
 
 </body>
