@@ -73,8 +73,9 @@
         card.className = "retailer-card";
         card.innerHTML = `
           <h3>🏪 ${r.shop}</h3>
-          <p>Owner: ${r.owner}</p>
-          <p>Location: ${r.location || "-"}</p>
+         <p>Owner: ${r.owner}</p>
+         <p>📍 ${r.location || "-"}</p>
+         <p>📞 ${r.phone || "-"}</p>
           <div class="stats-mini">
             <div>Total: ${r.total}</div>
             <div>Active: ${r.active}</div>
