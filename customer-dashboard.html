@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My EMI - Customer Dashboard</title>
+
+<script>
+  if (localStorage.getItem("isCustomerLoggedIn") !== "true") {
+    window.location.href = "customer-login.html";
+  }
+</script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+  body { background: #0f172a; color: #fff; padding: 15px; }
+  .header { display: flex; justify-content: space-between; align-items: center; background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #facc15; }
+  .header h1 { font-size: 16px; color: #facc15; }
+  .header p { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+  .btn-logout { background: #ef4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+  .device-box { background: #1e293b; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 15px; border-top: 4px solid #facc15; }
+  .device-box .icon { font-size: 40px; margin-bottom: 10px; }
+  .device-box h2 { font-size: 18px; margin-bottom: 5px; }
+  .device-box p { font-size: 12px; color: #94a3b8; }
+  .status-badge { display: inline-block; padding: 4px 12px; border-radius: 5px; font-size: 12px; font-weight: bold; color: #fff; margin-top: 10px; }
+  .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+  .card { background: #1e293b; padding: 15px; border-radius: 10px; border-left: 4px solid #facc15; }
+  .card h3 { font-size: 11px; color: #94a3b8; margin-bottom: 5px; }
+  .card p { font-size: 18px; font-weight: bold; }
+  .green { color: #22c55e; }
+  .red { color: #ef4444; }
+  .btn-pay { width: 100%; padding: 14px; background: #22c55e; color: #fff; font-weight: bold; font-size: 15px; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 15px; }
+  .btn-pay:disabled { background: #475569; cursor: not-allowed; }
+  .section-title { color: #facc15; font-size: 14px; margin: 15px 0 10px 0; border-bottom: 1px solid #334155; padding-bottom: 5px; }
+  .payment-row { background: #1e293b; padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .payment-row p { font-size: 12px; color: #94a3b8; }
+  .payment-row .amt { font-size: 14px; font-weight: bold; color: #22c55e; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1 id="welcomeName">Welcome!</h1>
+      <p>Customer Portal</p>
+    </div>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="device-box">
+    <div class="icon">📱</div>
+    <h2 id="deviceName">Device</h2>
+    <p id="deviceIMEI">IMEI: -</p>
+    <span class="status-badge" id="deviceStatus">Loading...</span>
+  </div>
+
+  <div class="summary">
+    <div class="card">
+      <h3>Total Paid</h3>
+      <p class="green" id="totalPaid">₹0</p>
+    </div>
+    <div class="card">
+      <h3>Pending Amount</h3>
+      <p class="red" id="totalPending">₹0</p>
+    </div>
+  </div>
+
+  <button class="btn-pay" id="payNowBtn" onclick="payNow()">💳 PAY EMI NOW</button>
+
+  <div class="section-title">💳 My Payment History</div>
+  <div id="paymentHistory"></div>
+
+  <script>
+    var deviceId = localStorage.getItem("customerDeviceId");
+    var customerName = localStorage.getItem("customerName");
+    var deviceName = localStorage.getItem("customerDevice");
+    var deviceIMEI = localStorage.getItem("customerIMEI");
+
+    document.getElementById("welcomeName").innerHTML = "👋 " + customerName;
+    document.getElementById("deviceName").innerHTML = deviceName;
+    document.getElementById("deviceIMEI").innerHTML = "IMEI: " + deviceIMEI;
+
+    // Status load karo aur payment history
+    async function loadData() {
+      try {
+        // Device status check karo
+        var devRes = await fetch("https://emi-locker-backend-1.onrender.com/api/devices/" + deviceId);
+        var dev = await devRes.json();
+
+        var statusEl = document.getElementById("deviceStatus");
+        if (dev.status === "ACTIVE") {
+          statusEl.innerHTML = "🔓 Active";
+          statusEl.style.background = "#22c55e";
+        } else {
+          statusEl.innerHTML = "🔒 Locked";
+          statusEl.style.background = "#ef4444";
+        }
+
+        // Payments load karo
+        var payRes = await fetch("https://emi-locker-backend-1.onrender.com/api/payments");
+        var allPayments = await payRes.json();
+
+        // Sirf is customer ke payments filter karo
+        var myPayments = allPayments.filter(p => p.device === deviceName && p.customer === customerName);
+
+        var totalPaid = myPayments.filter(p => p.status === "Paid").reduce((s, p) => s + p.amount, 0);
+        var totalPending = myPayments.filter(p => p.status !== "Paid").reduce((s, p) => s + p.amount, 0);
+
+        document.getElementById("totalPaid").innerHTML = "₹" + totalPaid.toLocaleString();
+        document.getElementById("totalPending").innerHTML = "₹" + totalPending.toLocaleString();
+
+        // Payment history render karo
+        var historyDiv = document.getElementById("paymentHistory");
+        historyDiv.innerHTML = "";
+        if (myPayments.length === 0) {
+          historyDiv.innerHTML = '<p style="text-align:center;color:#94a3b8;font-size:12px;">Koi payment record nahi hai.</p>';
+        } else {
+          myPayments.forEach(function (p) {
+            var div = document.createElement("div");
+            div.className = "payment-row";
+            div.innerHTML = `
+              <div>
+                <p>${p.date}</p>
+                <p style="color:#fff; font-size:13px;">${p.status}</p>
+              </div>
+              <span class="amt">₹${p.amount.toLocaleString()}</span>
+            `;
+            historyDiv.appendChild(div);
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function payNow() {
+      if (!confirm("💳 Confirm EMI Payment of ₹2,500?")) return;
+
+      var today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      var newPayment = {
+        customer: customerName,
+        device: deviceName,
+        amount: 2500, // Abhi fixed rakha hai, baad mein dynamic karenge
+        date: today,
+        status: "Paid",
+        retailerId: null // Optional: agar customer app se pay kar raha hai toh yeh null rahega
+      };
+
+      try {
+        var response = await fetch("https://emi-locker-backend-1.onrender.com/api/payments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newPayment)
+        });
+
+        if (response.ok) {
+          alert("✅ Payment Successful! (Mock)");
+          loadData(); // Refresh list
+        } else {
+          alert("❌ Payment failed!");
+        }
+      } catch (error) {
+        alert("❌ Server error!");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("isCustomerLoggedIn");
+      localStorage.removeItem("customerDeviceId");
+      localStorage.removeItem("customerName");
+      localStorage.removeItem("customerDevice");
+      localStorage.removeItem("customerIMEI");
+      window.location.href = "customer-login.html";
+    }
+
+    loadData();
+  </script>
+
+</body>
+</html>

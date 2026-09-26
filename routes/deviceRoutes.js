@@ -71,4 +71,17 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Customer Login (Phone Number se)
+router.post('/customer-login', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    const device = await Device.findOne({ customerPhone: phone });
+    if (!device) {
+      return res.status(404).json({ message: 'Is number par koi device nahi mila!' });
+    }
+    res.json(device);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 module.exports = router;
